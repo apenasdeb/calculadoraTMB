@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Metabólica Basal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            text-align: center;
+            background-color: #d4af37; /* Dourado */
+            padding: 20px 0;
+        }
+        header h1 {
+            color: #000;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .form-container {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        .form-container label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        .form-container input,
+        .form-container select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #d32f2f; /* Vermelho */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #b71c1c;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Calculadora Metabólica Basal</h1>
+    </header>
+    <main>
+        <div class="form-container">
+            <form id="bmrForm">
+                <label for="gender">Gênero:</label>
+                <select id="gender" required>
+                    <option value="">Selecione</option>
+                    <option value="male">Masculino</option>
+                    <option value="female">Feminino</option>
+                </select>
+
+                <label for="weight">Peso (kg):</label>
+                <input type="number" id="weight" step="0.1" required>
+
+                <label for="height">Altura (cm):</label>
+                <input type="number" id="height" step="0.1" required>
+
+                <label for="age">Idade (anos):</label>
+                <input type="number" id="age" required>
+
+                <label for="activity">Nível de Atividade:</label>
+                <select id="activity" required>
+                    <option value="">Selecione</option>
+                    <option value="1.2">Sedentário</option>
+                    <option value="1.375">Levemente Ativo</option>
+                    <option value="1.55">Moderadamente Ativo</option>
+                    <option value="1.725">Muito Ativo</option>
+                </select>
+
+                <button type="button" onclick="calculateBMR()">Calcular</button>
+            </form>
+            <div class="result" id="result"></div>
+        </div>
+    </main>
+    <script>
+        function calculateBMR() {
+            const gender = document.getElementById('gender').value;
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const age = parseInt(document.getElementById('age').value);
+            const activity = parseFloat(document.getElementById('activity').value);
+
+            if (!gender || !weight || !height || !age || !activity) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            let bmr;
+            if (gender === 'male') {
+                bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+            } else {
+                bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+            }
+
+            const totalCalories = bmr * activity;
+            const deficit20 = totalCalories * 0.8;
+            const deficit25 = totalCalories * 0.75;
+            const deficit30 = totalCalories * 0.7;
+
+            document.getElementById('result').innerHTML = `
+                <p>Seu metabolismo basal é: <strong>${bmr.toFixed(2)}</strong> calorias por dia.</p>
+                <p>Calorias necessárias considerando o nível de atividade: <strong>${totalCalories.toFixed(2)}</strong>.</p>
+                <p><strong>Recomendações de Déficit Calórico:</strong></p>
+                <ul>
+                    <li>20% (Ideal): <strong>${deficit20.toFixed(2)}</strong> calorias por dia.</li>
+                    <li>25% (Moderado): <strong>${deficit25.toFixed(2)}</strong> calorias por dia.</li>
+                    <li>30% (Louco e desesperado, não indicado para iniciantes): <strong>${deficit30.toFixed(2)}</strong> calorias por dia.</li>
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html>
